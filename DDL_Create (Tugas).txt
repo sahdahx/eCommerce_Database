@@ -1,0 +1,41 @@
+CREATE TABLE ItemType (
+  ItemTypeID CHAR(5) NOT NULL PRIMARY KEY,
+  ItemTypeName VARCHAR(50) NOT NULL,
+
+  -- CONSTRAINT ItemTypeID LIKE 'IT[0-9][0-9][0-9]'
+  CONSTRAINT cekIDItemType CHECK(ItemTypeID LIKE 'IT[0-9][0-9][0-9]')
+);
+
+CREATE TABLE Item (
+  ItemID CHAR(5) NOT NULL PRIMARY KEY,
+  --foreign key dari ItemType
+  ItemTypeID CHAR(5) NOT NULL REFERENCES ItemType ON UPDATE CASCADE ON DELETE CASCADE,
+  ItemName VARCHAR(15) NOT NULL,
+  Price NUMERIC(11,2),
+  Quantity INTEGER,
+
+  -- CONSTRAINT ItemID LIKE 'IM[0-9][0-9][0-9]'
+  CONSTRAINT cekIDItem CHECK(ItemID LIKE 'IM[0-9][0-9][0-9]')
+);
+
+CREATE TABLE HeaderSellTransaction (
+  TransactionID CHAR(5) NOT NULL PRIMARY KEY,
+  --foreign key dari Customer
+  CustomerID CHAR(50) NOT NULL REFERENCES Customer ON UPDATE CASCADE ON DELETE CASCADE,
+  --foreign key dari Staff
+  StaffID CHAR(10) NOT NULL REFERENCES Staff ON UPDATE CASCADE ON DELETE CASCADE,
+  TransactionDate DATE,
+  PaymentType VARCHAR(20)
+
+  -- CONSTRAINT TransactionID LIKE 'TR[0-9][0-9][0-9]',
+  CONSTRAINT CekIDTrans CHECK(TransactionID LIKE 'TR[0-9][0-9][0-9]')
+);
+
+CREATE TABLE DetailSellTransaction (
+  -- TransactionID CHAR(5) NOT NULL PRIMARY KEY,
+  -- ItemID CHAR(5) NOT NULL PRIMARY KEY,
+  TransactionID CHAR(5) REFERENCES HeaderSellTransaction ON UPDATE CASCADE ON DELETE CASCADE,
+  ItemID CHAR(5) REFERENCES Item ON UPDATE CASCADE ON DELETE CASCADE,
+  PRIMARY KEY(TransactionID, ItemID),
+  SellQuantity INTEGER
+);

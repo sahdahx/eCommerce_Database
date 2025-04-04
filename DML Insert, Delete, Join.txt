@@ -1,0 +1,102 @@
+-- Bab 3.6 - DML Insert
+
+mysql> INSERT INTO Customer VALUES
+    -> ('CU006', 'Alex', 'Male', '123133233', 'Jalan Bunga');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Customer;
++------------+---------------+----------------+---------------+-------------------+
+| CustomerID | CustomerName  | CustomerGender | CustomerPhone | CustomerAddress   |
++------------+---------------+----------------+---------------+-------------------+
+| CU001      | Ahzi Izyu     | Male           | 0812345677789 | Jalan Selatan 69  |
+| CU002      | Rei Zuka      | Male           | 0809765432121 | Jalan Barat 42    |
+| CU003      | Vina Caliburn | Female         | 086221156284  | Jalan Utara 80    |
+| CU004      | Lafuan Gorp   | Male           | 089526825123  | Jalan Timur 99    |
+| CU005      | Bernard Spoon | Male           | 085217186920  | Jalan Tenggara 44 |
+| CU006      | Alex          | Male           | 123133233     | Jalan Bunga       |
++------------+---------------+----------------+---------------+-------------------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO Customer(CustomerID, CustomerName) VALUES (7, 'Alexa');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM Customer;
++------------+---------------+----------------+---------------+-------------------+
+| CustomerID | CustomerName  | CustomerGender | CustomerPhone | CustomerAddress   |
++------------+---------------+----------------+---------------+-------------------+
+| 7          | Alexa         | NULL           | NULL          | NULL              |
+| CU001      | Ahzi Izyu     | Male           | 0812345677789 | Jalan Selatan 69  |
+| CU002      | Rei Zuka      | Male           | 0809765432121 | Jalan Barat 42    |
+| CU003      | Vina Caliburn | Female         | 086221156284  | Jalan Utara 80    |
+| CU004      | Lafuan Gorp   | Male           | 089526825123  | Jalan Timur 99    |
+| CU005      | Bernard Spoon | Male           | 085217186920  | Jalan Tenggara 44 |
+| CU006      | Alex          | Male           | 123133233     | Jalan Bunga       |
++------------+---------------+----------------+---------------+-------------------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO Customer (CustomerID, CustomerName) VALUES ('CU008', 'Rei Zuka');
+Query OK, 1 row affected (0.01 sec)
+
+
+-- Bab 3.7 - DML Delete
+
+mysql> DELETE FROM Customer WHERE CustomerName = 'Alex';
+Query OK, 1 row affected (0.02 sec)
+
+mysql> DELETE FROM Customer WHERE CustomerName = 'Rei Zuka';
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> SELECT * FROM Customer;
++------------+---------------+----------------+---------------+-------------------+
+| CustomerID | CustomerName  | CustomerGender | CustomerPhone | CustomerAddress   |
++------------+---------------+----------------+---------------+-------------------+
+| 7          | Alexa         | NULL           | NULL          | NULL              |
+| CU001      | Ahzi Izyu     | Male           | 0812345677789 | Jalan Selatan 69  |
+| CU003      | Vina Caliburn | Female         | 086221156284  | Jalan Utara 80    |
+| CU004      | Lafuan Gorp   | Male           | 089526825123  | Jalan Timur 99    |
+| CU005      | Bernard Spoon | Male           | 085217186920  | Jalan Tenggara 44 |
++------------+---------------+----------------+---------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql>  DELETE FROM HeaderSellTransaction
+    ->  WHERE DAY(TransactionDate) = 21;
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> SELECT * FROM HeaderSellTransaction;
++---------------+------------+---------+-----------------+-------------+
+| TransactionID | CustomerID | StaffID | TransactionDate | PaymentType |
++---------------+------------+---------+-----------------+-------------+
+| TR001         | CU001      | SF004   | 2020-12-20      | Credit      |
+| TR003         | CU003      | SF003   | 2020-12-20      | Cash        |
+| TR004         | CU004      | SF005   | 2020-12-20      | Debit       |
+| TR008         | CU003      | SF002   | 2020-12-22      | Credit      |
+| TR009         | CU005      | SF004   | 2020-12-22      | Debit       |
++---------------+------------+---------+-----------------+-------------+
+5 rows in set (0.00 sec)
+
+
+-- Bab 3.8 - DML Join
+
+mysql> SELECT CustomerName FROM Customer cs, HeaderSellTransaction hst
+    -> WHERE cs.CustomerID = hst.CustomerID
+    -> AND DAY(hst.TransactionDate) = 20;
++---------------+
+| CustomerName  |
++---------------+
+| Ahzi Izyu     |
+| Vina Caliburn |
+| Lafuan Gorp   |
++---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT cs.CustomerID, cs.CustomerName, hst.PaymentType
+    -> FROM Customer cs, HeaderSellTransaction hst
+    -> WHERE cs.CustomerID = hst.CustomerID AND DAY(hst.TransactionDate) = 20;
++------------+---------------+-------------+
+| CustomerID | CustomerName  | PaymentType |
++------------+---------------+-------------+
+| CU001      | Ahzi Izyu     | Credit      |
+| CU003      | Vina Caliburn | Cash        |
+| CU004      | Lafuan Gorp   | Debit       |
++------------+---------------+-------------+
+3 rows in set (0.00 sec)

@@ -1,0 +1,371 @@
+NOTE:
+-- String Function
+-- LEFT(nama_kolom, berapa_digit)       ambil karakter dari kiri string
+-- RIGHT(nama_kolom, berapa_digit)      ambil karakter dari kanan string
+-- REVERSE(nama_kolom)                  membalikkan urutan karakter string
+-- CHARINDEX(cari_apa, nama_kolom)      SQLServer, cari posisi substring dlm string Utama
+-- LOCATE(cari_apa, nama_kolom)         MySQL
+-- SUBSTRING(nama_kolom, start, brp_digit) ambil sebagian karakter di posisi tertentu
+-- UPPER(nama_kolom)                    ubah huruf dlm string jadi besar
+-- LOWER(nama_kolom)                    ubah huruf dlm string jadi kecil 
+
+-- Math Function
+-- MAX     ambil nilai terbesar dlm kolom
+-- MIN     ambil nilai terkecil dlm kolom
+-- AVG     hitung rata-rata dlm kolom
+-- SUM     hitung total dlm kolom
+-- COUNT   hitung jumlah baris dlm kolom/table
+-- ABS     mengembalikan nilai mutlak (positif) suatu angka
+-- CEIL/CEILING pembulatan terdekat ke atas
+-- FLOOR        pembulatan terdekat ke bawah
+-- ROUND        pembulatan ke decimal tertentu
+-- MOD          mengembalikan sisa hasil bagi
+-- POW/POWER    hitung hasil pangkat 
+-- SQRT         hitung hasil akar
+-- RAND         menghasilkan angka acak antara 0 dan 1
+
+-- Date Function
+-- DATENAME(interval, date) 
+-- DATEDIFF(interval, first_date, second_date) 
+-- DATEADD(interval, tambah_brp, date)  
+
+
+-- Bab 3.2 - DML SELECT String Function
+
+mysql> SELECT [Jenis Kelamin] = LEFT(StaffGender, 1) FROM Staff;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[Jenis Kelamin] = LEFT(StaffGender, 1) FROM Staff' at line 1
+
+mysql> -- kode di atas hanya bisa digunakan di SQL Server, bukan MYSQL
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT LEFT(StaffGender, 1) AS `Jenis Kelamin` FROM Staff;
++---------------+
+| Jenis Kelamin |
++---------------+
+| M             |
+| F             |
+| M             |
+| M             |
+| M             |
+| F             |
++---------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT RIGHT(StaffName, 2) AS 'Huruf Terakhir Nama Staff' FROM Staff;
++---------------------------+
+| Huruf Terakhir Nama Staff |
++---------------------------+
+| st                        |
+| ym                        |
+| ss                        |
+| an                        |
+| ee                        |
+| ah                        |
++---------------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM Staff
+    -> WHERE StaffGender = 'Male';
++---------+--------------+-------------+--------------+---------------------+-------------+---------------+
+| StaffID | StaffName    | StaffGender | StaffPhone   | StaffAddress        | StaffSalary | StaffPosition |
++---------+--------------+-------------+--------------+---------------------+-------------+---------------+
+| SF001   | Josek Christ | Male        | 080152852175 | Jalan Barat Daya 66 | 15000000.00 | Manager       |
+| SF003   | Brayant Bass | Male        | 086572819602 | Jalan Barat Laut 77 |  6000000.00 | Cashier       |
+| SF004   | Tedd Banan   | Male        | 089175212682 | Jalan Tengah 86     |  6500000.00 | Cashier       |
+| SF005   | Pain Gee     | Male        | 081092871896 | Jalan Pahlawan 23   |  7300000.00 | Cashier       |
++---------+--------------+-------------+--------------+---------------------+-------------+---------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT CHARINDEX(9, StaffPhone) AS 'Number Phone with 9' FROM Staff;
+ERROR 1305 (42000): FUNCTION ecommerce.CHARINDEX does not exist
+
+mysql> SELECT LOCATE('9', StaffPhone) AS 'Number Phone with 9' FROM Staff;
++---------------------+
+| Number Phone with 9 |
++---------------------+
+|                   0 |
+|                   7 |
+|                   9 |
+|                   3 |
+|                   5 |
+|                   5 |
++---------------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT INSTR(StaffPhone, 9) AS 'Number Phone with 9' FROM Staff;
++---------------------+
+| Number Phone with 9 |
++---------------------+
+|                   0 |
+|                   7 |
+|                   9 |
+|                   3 |
+|                   5 |
+|                   5 |
++---------------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT INSTR('9', StaffPhone) AS 'Number Phone with 9' FROM Staff;
++---------------------+
+| Number Phone with 9 |
++---------------------+
+|                   0 |
+|                   0 |
+|                   0 |
+|                   0 |
+|                   0 |
+|                   0 |
++---------------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT StaffName FROM Staff;
++--------------+
+| StaffName    |
++--------------+
+| Josek Christ |
+| Fifa Deym    |
+| Brayant Bass |
+| Tedd Banan   |
+| Pain Gee     |
+| Jovan Jostah |
++--------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT SUBSTRING(StaffName, 2, 4) AS 'index ke-2 4 huruf' FROM Staff;
++--------------------+
+| index ke-2 4 huruf |
++--------------------+
+| osek               |
+| ifa                |
+| raya               |
+| edd                |
+| ain                |
+| ovan               |
++--------------------+
+6 rows in set (0.00 sec)
+
+-- Cari posisi spasi pertama dgn LOCATE
+-- Lalu ambil karakter string ke-1 dari StaffName dgn SUBSTRING sampai sblm spasi pertama
+mysql> SELECT SUBSTRING(StaffName, 1, LOCATE(' ', StaffName)) AS 'Kata Pertama' FROM Staff;
++--------------+
+| Kata Pertama |
++--------------+
+| Josek        |
+| Fifa         |
+| Brayant      |
+| Tedd         |
+| Pain         |
+| Jovan        |
++--------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT UPPER(StaffName) AS 'Nama Huruf Besar' FROM Staff;
++------------------+
+| Nama Huruf Besar |
++------------------+
+| JOSEK CHRIST     |
+| FIFA DEYM        |
+| BRAYANT BASS     |
+| TEDD BANAN       |
+| PAIN GEE         |
+| JOVAN JOSTAH     |
++------------------+
+6 rows in set (0.01 sec)
+
+mysql> SELECT LOWER(StaffName) AS 'Nama Huruf Kecil' FROM Staff;
++------------------+
+| Nama Huruf Kecil |
++------------------+
+| josek christ     |
+| fifa deym        |
+| brayant bass     |
+| tedd banan       |
+| pain gee         |
+| jovan jostah     |
++------------------+
+6 rows in set (0.01 sec)
+
+
+-- Bab 3.3 - DML SELECT Math Function
+
+mysql> SELECT MAX(StaffSalary) AS 'Gaji Terbesar' FROM Staff;
++---------------+
+| Gaji Terbesar |
++---------------+
+|   15000000.00 |
++---------------+
+1 row in set (0.02 sec)
+
+mysql> SELECT MIN(StaffSalary) AS 'Gaji Terkecil' FROM Staff;
++---------------+
+| Gaji Terkecil |
++---------------+
+|    6000000.00 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT AVG(StaffSalary) AS 'Rata-Rata Gaji' FROM Staff;
++----------------+
+| Rata-Rata Gaji |
++----------------+
+| 8583333.333333 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT SUM(StaffSalary) AS 'Total Gaji' FROM Staff;
++-------------+
+| Total Gaji  |
++-------------+
+| 51500000.00 |
++-------------+
+1 row in set (0.00 sec)
+
+-- Jumlah transaksi terjadi = jumlah TransactionID
+mysql> SELECT COUNT(TransactionID) FROM HeaderSellTransaction;
++----------------------+
+| COUNT(TransactionID) |
++----------------------+
+|                    9 |
++----------------------+
+1 row in set (0.01 sec)
+
+-- Menghitung nilai absolut/mutlak (positif) dari selisih gaji tertinggi dan terendah
+mysql> SELECT ABS(MIN(StaffSalary) - MAX(StaffSalary)) AS 'Selisih Gaji Terbesar' FROM Staff;
++-----------------------+
+| Selisih Gaji Terbesar |
++-----------------------+
+|            9000000.00 |
++-----------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT (MIN(StaffSalary) - MAX(StaffSalary)) AS 'Selisih Gaji Terbesar' FROM Staff;
++-----------------------+
+| Selisih Gaji Terbesar |
++-----------------------+
+|           -9000000.00 |
++-----------------------+
+1 row in set (0.00 sec)
+
+-- Membulatkan rata-rata gaji ke atas ke bilangan bulat terdekat
+mysql> SELECT CEIL(AVG(StaffSalary)) AS 'Rata-Rata Gaji Dibulatkan Ke Atas' FROM Staff;
++-----------------------------------+
+| Rata-Rata Gaji Dibulatkan Ke Atas |
++-----------------------------------+
+|                           8583334 |
++-----------------------------------+
+1 row in set (0.01 sec)
+
+-- Membulatkan rata-rata gaji ke bawah ke bilangan bulat terdekat
+mysql> SELECT FLOOR(AVG(StaffSalary)) AS 'Rata-Rata Gaji Dibulatkan Ke Bawah' FROM Staff;
++-----------------------------------+
+| Rata-Rata Gaji Dibulatkan Ke Bawah |
++-----------------------------------+
+|                           8583333 |
++-----------------------------------+
+1 row in set (0.00 sec)
+
+-- Membulatkan rata-rata gaji ke 2 angka desimal
+mysql> SELECT ROUND(AVG(StaffSalary), 2) AS 'Rata-Rata Gaji Dibulatkan 2 Desimal' FROM Staff;
++-------------------------------------+
+| Rata-Rata Gaji Dibulatkan 2 Desimal |
++-------------------------------------+
+|                          8583333.33 |
++-------------------------------------+
+1 row in set (0.00 sec)
+
+-- Menghitung sisa hasil bagi total gaji dengan jumlah staff (MOD)
+mysql> SELECT MOD(SUM(StaffSalary), COUNT(StaffID)) AS 'Sisa Pembagian Total Gaji'FROM Staff;
++---------------------------+
+| Sisa Pembagian Total Gaji |
++---------------------------+
+|                      2.00 |
++---------------------------+
+1 row in set (0.01 sec)
+
+-- Menghitung akar kuadrat dari rata-rata gaji
+mysql> SELECT SQRT(AVG(StaffSalary)) AS 'Akar Kuadrat Rata-Rata Gaji' FROM Staff;
++-----------------------------+
+| Akar Kuadrat Rata-Rata Gaji |
++-----------------------------+
+|           2929.732638541158 |
++-----------------------------+
+1 row in set (0.00 sec)
+
+
+-- Bab 3.4 - DML SELECT Date Function
+
+-- SELECT TransactionID, DATENAME(YEAR, TransactionDate) AS TransactionYear FROM HeaderSellTransaction;
+mysql> SELECT TransactionID, DATE_FORMAT(TransactionDate, '%Y') AS TransactionYear
+    -> FROM HeaderSellTransaction;
++---------------+-----------------+
+| TransactionID | TransactionYear |
++---------------+-----------------+
+| TR001         | 2020            |
+| TR002         | 2020            |
+| TR003         | 2020            |
+| TR004         | 2020            |
+| TR005         | 2020            |
+| TR006         | 2020            |
+| TR007         | 2020            |
+| TR008         | 2020            |
+| TR009         | 2020            |
++---------------+-----------------+
+9 rows in set (0.00 sec)
+
+-- SELECT TransactionID, DATEDIFF(DAY, '2020-12-20', TransactionDate) AS DaysFromStart FROM HeaderSellTransaction;
+mysql> SELECT TransactionID, DATEDIFF(TransactionDate, '2020-12-15') AS DaysFromStart
+    -> FROM HeaderSellTransaction;
++---------------+---------------+
+| TransactionID | DaysFromStart |
++---------------+---------------+
+| TR001         |             5 |
+| TR002         |             5 |
+| TR003         |             5 |
+| TR004         |             5 |
+| TR005         |             6 |
+| TR006         |             6 |
+| TR007         |             7 |
+| TR008         |             7 |
+| TR009         |             7 |
++---------------+---------------+
+9 rows in set (0.00 sec)
+
+-- SELECT TransactionID, DATEADD(DAY, 7, TransactionDate) AS TransactionDatePlus7 FROM HeaderSellTransaction;
+mysql> SELECT TransactionID, DATE_ADD(TransactionDate, INTERVAL 7 DAY) AS TransactionDatePlus7
+    -> FROM HeaderSellTransaction;
++---------------+----------------------+
+| TransactionID | TransactionDatePlus7 |
++---------------+----------------------+
+| TR001         | 2020-12-27           |
+| TR002         | 2020-12-27           |
+| TR003         | 2020-12-27           |
+| TR004         | 2020-12-27           |
+| TR005         | 2020-12-28           |
+| TR006         | 2020-12-28           |
+| TR007         | 2020-12-29           |
+| TR008         | 2020-12-29           |
+| TR009         | 2020-12-29           |
++---------------+----------------------+
+9 rows in set (0.01 sec)
+
+
+-- Bab 3.5 - DML SELECT Advanced Function
+-- SELECT 'Rp' + CAST(StaffSalary AS VARCHAR) AS 'Gaji' FROM Staff;
+mysql> SELECT CONCAT('Rp', CAST(StaffSalary AS CHAR)) AS 'Gaji' FROM Staff;
++---------------+
+| Gaji          |
++---------------+
+| Rp15000000.00 |
+| Rp10000000.00 |
+| Rp6000000.00  |
+| Rp6500000.00  |
+| Rp7300000.00  |
+| Rp6700000.00  |
++---------------+
+6 rows in set (0.01 sec)
+
+-- SELECT CONVERT(VARCHAR, TransactionDate) AS 'Tanggal setelah di-convert' FROM HeaderSellTransaction;
+mysql> SELECT CONVERT(TransactionDate, VARCHAR) AS 'Tanggal setelah di-convert' FROM HeaderSellTransaction;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VARCHAR) AS 'Tanggal setelah di-convert' FROM HeaderSellTransaction' at line 1
+
+kesimpulan: better sqlserver than mysql
