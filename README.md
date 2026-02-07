@@ -25,7 +25,8 @@ Berisi query untuk manipulasi dan pengambilan data dari database.
 - ...
 
 ## 🚀 Platform
-Semua latihan ini dikerjakan menggunakan **SQL Server Management Studio (SSMS)**, namun query bersifat umum dan bisa disesuaikan untuk RDBMS lain (MySQL, PostgreSQL, dsb). Sebagai catatan, saya lebih sering menggunakan MYSql di Laragon.
+Semua latihan pada repo ini dikerjakan menggunakan **SQL Server Management Studio (SSMS)**. Namun, query bersifat umum dan bisa disesuaikan untuk RDBMS lain (MySQL, PostgreSQL, dsb). Sebagai catatan, saya lebih sering menggunakan MYSql di Laragon.
 
 ## 📝 Catatan
 Masih terdapat beberapa file yang sedang dalam pengembangan atau belum dibuat. Repo ini akan terus diperbarui seiring progres belajar.
+
